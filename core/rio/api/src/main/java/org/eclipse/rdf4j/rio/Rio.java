@@ -7,13 +7,7 @@
  *******************************************************************************/
 package org.eclipse.rdf4j.rio;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -455,6 +449,13 @@ public class Rio {
 
 		for (final Statement st : model) {
 			writer.handleStatement(st);
+		}
+		if (model instanceof Closeable) {
+			try {
+				((Closeable) model).close();
+			} catch (IOException e) {
+				throw new RDFHandlerException(e);
+			}
 		}
 		writer.endRDF();
 	}
